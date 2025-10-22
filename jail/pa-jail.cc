@@ -2996,6 +2996,7 @@ void jailownerinfo::wait_background(pid_t child, int ptymaster) {
 }
 
 void jailownerinfo::exec_done(pid_t child, int exit_status) {
+    kill(child, SIGINT);
     if (timingfd != -1) {
         write_timing();
     }
