@@ -239,13 +239,13 @@ class Pset {
 
         // pset key
         if (!isset($p->key) && (string) $pk === "") {
-            $pk = $p->psetid;
+            $pk = (string) $p->psetid;
         } else if (isset($p->key) && $pk !== null && (string) $p->key !== (string) $pk) {
             throw new PsetConfigException("pset key disagrees with `key`", "key");
         } else if (isset($p->key)) {
             $pk = $p->key;
         }
-        if (ctype_digit($pk) && intval($pk) !== $p->psetid) {
+        if (ctype_digit((string) $pk) && intval($pk) !== $p->psetid) {
             throw new PsetConfigException("numeric pset key disagrees with `psetid`", "key");
         } else if (!preg_match('/\A[^_.\/&;#][^\/&;#]*\z/', $pk)) {
             throw new PsetConfigException("pset key format error", "key");
@@ -257,7 +257,7 @@ class Pset {
             throw new PsetConfigException("pset key `psetNNN` requires that `NNN` is the psetid", "key");
         }
         $this->key = $pk;
-        $this->nonnumeric_key = ctype_digit($pk) ? "pset" . $pk : $pk;
+        $this->nonnumeric_key = ctype_digit((string) $pk) ? "pset" . $pk : $pk;
 
         // url keys
         $urlkey = $p->urlkey ?? null;
