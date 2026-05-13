@@ -243,7 +243,7 @@ class Pset {
         } else if (isset($p->key) && $pk !== null && (string) $p->key !== (string) $pk) {
             throw new PsetConfigException("pset key disagrees with `key`", "key");
         } else if (isset($p->key)) {
-            $pk = $p->key;
+            $pk = (string) $p->key;
         }
         if (ctype_digit((string) $pk) && intval($pk) !== $p->psetid) {
             throw new PsetConfigException("numeric pset key disagrees with `psetid`", "key");
@@ -613,7 +613,7 @@ class Pset {
 
 
     /** @return ?Repository */
-    function handout_repo(Repository $inrepo = null) {
+    function handout_repo(?Repository $inrepo = null) {
         return $this->conf->handout_repo($this, $inrepo);
     }
 
@@ -1569,7 +1569,7 @@ class DiffConfig {
     /** @param string $filename
      * @return ?DiffConfig
      * @suppress PhanAccessReadOnlyProperty */
-    static function combine($filename, DiffConfig $a = null, DiffConfig $b = null) {
+    static function combine($filename, ?DiffConfig $a = null, ?DiffConfig $b = null) {
         if (!$a && !$b) {
             return null;
         } else if (!$a || !$b) {

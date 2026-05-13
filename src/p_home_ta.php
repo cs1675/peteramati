@@ -26,7 +26,7 @@ class Home_TA_Page {
 
     /** @param bool $anonymous
      * @return array */
-    private function flag_row_json(Pset $pset, Contact $s = null, FlagTableRow $row, $anonymous) {
+    private function flag_row_json(Pset $pset, Contact $s, FlagTableRow $row, $anonymous) {
         $j = $s ? StudentSet::json_basics($s, $anonymous) : [];
         if (($gcid = $row->jnote("gradercid") ?? null)) {
             $j["gradercid"] = $gcid;

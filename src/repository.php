@@ -57,7 +57,7 @@ class Repository {
     /** @var list<array{string,string,list<string>,int}> */
     static private $_file_contents = [];
 
-    function __construct(Conf $conf = null) {
+    function __construct(?Conf $conf = null) {
         global $Conf;
         $conf = $conf ?? $Conf;
         $this->conf = $conf;
@@ -227,7 +227,7 @@ class Repository {
     static private $working_cache = [];
 
     /** @return -1|0|1 */
-    function validate_working(Contact $user, MessageSet $ms = null) {
+    function validate_working(Contact $user, ?MessageSet $ms = null) {
         if (isset(self::$working_cache[$this->url])) {
             return self::$working_cache[$this->url];
         } else if (self::$validate_time_used >= self::VALIDATE_TOTAL_TIMEOUT) {
@@ -240,7 +240,7 @@ class Repository {
     }
 
     /** @return bool */
-    function check_working(Contact $user, MessageSet $ms = null) {
+    function check_working(Contact $user, ?MessageSet $ms = null) {
         $working = $this->working;
         if ($working === 0) {
             $working = $this->validate_working($user, $ms);
@@ -263,12 +263,12 @@ class Repository {
     }
 
     /** @return -1|0|1 */
-    function validate_ownership(Contact $user, Contact $partner = null, MessageSet $ms = null) {
+    function validate_ownership(Contact $user, ?Contact $partner = null, ?MessageSet $ms = null) {
         return $this->reposite->validate_ownership($this, $user, $partner, $ms);
     }
 
     /** @return -1|0|1 */
-    function check_ownership(Contact $user, Contact $partner = null, MessageSet $ms = null) {
+    function check_ownership(Contact $user, ?Contact $partner = null, ?MessageSet $ms = null) {
         $when = 0;
         $ownership = -1;
         $always = $this->reposite->validate_ownership_always();
@@ -571,7 +571,7 @@ class Repository {
 
     /** @param ?string $branch
      * @return ?CommitRecord */
-    function latest_commit(Pset $pset = null, $branch = null) {
+    function latest_commit(?Pset $pset = null, $branch = null) {
         foreach ($this->commits($pset, $branch) as $c) {
             return $c;
         }
@@ -580,7 +580,7 @@ class Repository {
 
     /** @param ?string $branch
      * @return ?CommitRecord */
-    function latest_nontrivial_commit(Pset $pset = null, $branch = null) {
+    function latest_nontrivial_commit(?Pset $pset = null, $branch = null) {
         $branch = $branch ?? ($pset ? $pset->main_branch : $this->conf->default_main_branch);
         $trivial_merges_known = !!($this->_commit_lists_cc[$branch] ?? false);
 
@@ -629,7 +629,7 @@ class Repository {
     /** @param string $hashpart
      * @param ?string $branch
      * @return ?CommitRecord */
-    function connected_commit($hashpart, Pset $pset = null, $branch = null) {
+    function connected_commit($hashpart, ?Pset $pset = null, $branch = null) {
         // ensure there's some commits
         if (empty($this->_commits)) {
             $this->commits($pset, $branch);
