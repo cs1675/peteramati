@@ -558,8 +558,15 @@ class Mailer {
                 $to = "";
             unset($headers["subject"]);
             $htext = substr(join("", $headers), 0, -2);
-            return mail($to, $prep->subject, $prep->body, $htext, $extra);
-
+            $ret = null;
+            if ($extra === null) {
+                $ret = mail($to, $prep->subject, $prep->body, $htext);
+            } else {
+                $ret = mail($to, $prep->subject, $prep->body, $htext, $extra);
+            }
+            if (!$ret) 
+                error_log("Mail " . $to . ": " . $prep->subject . " failed to send");
+            return $ret;
         } else if (!$Conf->opt("sendEmail")
                    && !preg_match('/\Aanonymous\d*\z/', $to)) {
             unset($headers["mime-version"], $headers["content-type"]);
