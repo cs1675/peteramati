@@ -276,7 +276,7 @@ function load_pset_info() {
 
 load_pset_info();
 
-putenv("GIT_REPOCACHE=" . SiteLoader::$root . "/repo");
+putenv("GIT_REPOCACHE=" . $Conf->repository_dir());
 if ($Conf->opt("mysql") !== null) {
     putenv("MYSQL=" . $Conf->opt("mysql"));
 }

@@ -159,6 +159,8 @@ class Conf {
     private $_site_contact;
     /** @var array<string,Repository> */
     private $_handout_repos = [];
+    /** @var ?string */
+    private $_repository_dir;
     /** @var array<int,array<string,CommitRecord>> */
     private $_handout_commits = [];
     /** @var array<int,?CommitRecord> */
@@ -519,6 +521,9 @@ class Conf {
         if ($config->_defaults->main_branch ?? null) {
             $this->set_default_main_branch($config->_defaults->main_branch);
         }
+        if (($rd = Pset::cstr($config->_defaults, "repo_dir", "repository_dir"))) {
+            $this->set_repository_dir($rd);
+        }
         if (!($config->_messagedefs ?? null)) {
             $config->_messagedefs = (object) array();
         }
@@ -530,6 +535,16 @@ class Conf {
     /** @param string $b */
     function set_default_main_branch($b) {
         $this->default_main_branch = $b;
+    }
+
+    /** @return string */
+    function repository_dir() {
+        return $this->_repository_dir ?? SiteLoader::$root . "/repo";
+    }
+
+    /** @param string $rd */
+    function set_repository_dir($rd) {
+        $this->_repository_dir = $rd;
     }
 
 

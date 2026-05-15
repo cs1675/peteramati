@@ -289,7 +289,8 @@ class RepoFetch_Batch {
             throw new CommandLineException("Cannot create repository");
         }
         if ($this->verbose) {
-            fwrite(STDERR, "* repo{$this->repo->repoid}, repo/repo{$this->repo->cacheid} {$this->repo->url}\n");
+            $repo_dir = ltrim($this->repo->conf->repository_dir(), "/");
+            fwrite(STDERR, "* repo{$this->repo->repoid}, {$repo_dir}/repo{$this->repo->cacheid} {$this->repo->url}\n");
         }
 
         // configure remote

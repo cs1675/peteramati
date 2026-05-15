@@ -304,10 +304,10 @@ class Repository {
 
     /** @return string */
     function ensure_repodir() {
-        $subdir = "/repo/repo{$this->cacheid}";
-        $repodir = SiteLoader::$root . $subdir;
+        $repodir = $this->conf->repository_dir() . "/repo{$this->cacheid}";
         if (!file_exists("{$repodir}/.git/config")) {
-            if (!mk_site_subdir($subdir, 02770)) {
+            if (!mk_site_subdir($repodir, 02770)) {
+                error_log("Could not create directory " . $repodir);
                 return "";
             }
             shell_exec("cd {$repodir} && git init --shared -b main");
@@ -762,11 +762,11 @@ class Repository {
 
     /** @return ?string */
     static private function _temp_repodir() {
-        $root = SiteLoader::$root;
+        $repo_dir = Conf::$main->repository_dir();
         $n = 0;
         while (true) {
             $rand = mt_rand(100000000, 999999999);
-            $tmpdir = "{$root}/repo/tmprepo.{$rand}";
+            $tmpdir = "{$repo_dir}/tmprepo.{$rand}";
             if (@mkdir($tmpdir, 0770)) {
                 break;
             } else if (++$n > 20) {
@@ -822,7 +822,7 @@ class Repository {
             $addcommand[] = $f;
         }
 
-        $repodir = SiteLoader::$root . "/repo/repo{$this->cacheid}";
+        $repodir = $this->conf->repository_dir() . "/repo{$this->cacheid}";
         if (!$this->gitrunok($addcommand, ["cwd" => $tmpdir])
             || !$this->gitrunok(["git", "commit", "-m", "Truncated version of {$hash} for pset {$pset->key}"], ["cwd" => $tmpdir])
             || !$this->gitrunok(["git", "push", "-f", $repodir, "main:refs/tags/trunc{$pset->id}_{$hash}"], ["cwd" => $tmpdir])) {

@@ -80,8 +80,10 @@ class Pset {
     public $gitless_grades;
     /** @var ?string */
     public $partner_repo;
-    /** @var bool */
+    /** @var ?bool */
     public $hide_comments = false;
+    /** @var ?string */
+    public $repo_dir;
 
     /** @var string */
     public $main_branch = "master";
@@ -313,6 +315,7 @@ class Pset {
             throw new PsetConfigException("`partner_repo` should be \"same\" or \"different\"", "partner_repo");
         }
         $this->hide_comments = self::cbool($p, "hide_comments");
+        $this->repo_dir = self::cstr($p, "repo_dir", "repository_dir");
 
         // directory
         $this->main_branch = self::cstr($p, "main_branch") ?? "master";

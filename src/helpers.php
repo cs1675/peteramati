@@ -403,30 +403,31 @@ function tempdir($mode = 0700) {
     return false;
 }
 
-/** @param string $subdir
+/** @param string $path
  * @param int $mode
  * @return bool */
-function mk_site_subdir($subdir, $mode) {
-    $pos = 0;
+function mk_site_subdir($path, $mode) {
+    $root = SiteLoader::$root;
+    $pos = str_starts_with($path, $root . "/") ? strlen($root) : 0;
     do {
         $oldpos = $pos;
-        assert($subdir[$pos] === "/");
-        $pos = strpos($subdir, "/", $pos + 1) ? : strlen($subdir);
-        $path = SiteLoader::$root . substr($subdir, 0, $pos);
-        if (!is_dir($path)) {
-            if (!mkdir($path, $mode)) {
+        assert($path[$pos] === "/");
+        $pos = strpos($path, "/", $pos + 1) ?: strlen($path);
+        $abspath = substr($path, 0, $pos);
+        if ($abspath !== "" && !is_dir($abspath)) {
+            if (!mkdir($abspath, $mode)) {
                 return false;
             }
-            chmod($path, $mode);
-            if ($oldpos === 0) {
-                $s = file_get_contents(SiteLoader::$root . "/src/.htaccess");
+            chmod($abspath, $mode);
+            if ($oldpos === strlen($root) && $oldpos !== 0) {
+                $s = file_get_contents($root . "/src/.htaccess");
                 if ($s === false
-                    || file_put_contents("{$path}/.htaccess", $s) !== strlen($s)) {
+                    || file_put_contents("{$abspath}/.htaccess", $s) !== strlen($s)) {
                     return false;
                 }
             }
         }
-    } while ($pos < strlen($subdir));
+    } while ($pos < strlen($path));
     return true;
 }
 
