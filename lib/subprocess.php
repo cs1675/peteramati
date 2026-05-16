@@ -85,6 +85,10 @@ class Subprocess implements JsonSerializable {
         }
         $cmd = PHP_VERSION_ID >= 70400 ? $command : self::unparse_command($command);
         $proc = proc_open($cmd, $descriptors, $pipes, $cwd);
+        if (!$proc) {
+            throw new Error("Could not run " . implode(" ", $cmd) . " in " . $cwd);
+        }
+
         if ($stdin !== null) {
             stream_set_blocking($pipes[0], false);
         }
