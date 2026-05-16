@@ -32,6 +32,10 @@ class Repository {
     public $notes;
     /** @var ?string */
     public $heads;
+    /** @var ?int */
+    public $rflags;
+    /** @var ?int */
+    public $repogid;
 
     /** @var bool */
     public $is_handout = false;
