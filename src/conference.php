@@ -2495,6 +2495,7 @@ class Conf {
         }
         $qc = $this->_queues[$name] ?? $this->_queues["default"] ?? new QueueConfig;
         if ($nconcurrent !== null) {
+            $qc = clone $qc;
             $qc->nconcurrent = $nconcurrent;
         }
         return $qc;
