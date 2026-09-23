@@ -1446,7 +1446,7 @@ class QueueItem {
     function cleanup() {
         if ($this->_runstatus === 1) {
             $runlog = $this->run_logger();
-            unlink($runlog->pid_file());
+            @unlink($runlog->pid_file());
             @unlink($runlog->job_prefix($this->runat) . ".in");
         }
         if ($this->_logstream) {
