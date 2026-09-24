@@ -161,6 +161,8 @@ class Conf {
     private $_handout_repos = [];
     /** @var ?string */
     private $_repository_dir;
+    /** @var ?string */
+    private $_log_dir;
     /** @var array<int,array<string,CommitRecord>> */
     private $_handout_commits = [];
     /** @var array<int,?CommitRecord> */
@@ -524,6 +526,9 @@ class Conf {
         if (($rd = Pset::cstr($config->_defaults, "repo_dir", "repository_dir"))) {
             $this->set_repository_dir($rd);
         }
+        if (($ld = Pset::cstr($config->_defaults, "log_dir"))) {
+            $this->set_log_dir($ld);
+        }
         if (!($config->_messagedefs ?? null)) {
             $config->_messagedefs = (object) array();
         }
@@ -545,6 +550,16 @@ class Conf {
     /** @param string $rd */
     function set_repository_dir($rd) {
         $this->_repository_dir = $rd;
+    }
+
+    /** @return string */
+    function log_dir() {
+        return $this->_log_dir ?? SiteLoader::$root . "/log";
+    }
+
+    /** @param string $ld */
+    function set_log_dir($ld) {
+        $this->_log_dir = $ld;
     }
 
 
